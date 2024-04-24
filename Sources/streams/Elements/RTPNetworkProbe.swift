@@ -7,6 +7,7 @@
 
 import Foundation
 import gstreamer
+import gstreamer_net
 import gstreamer_swift
 
 public class RTPNetworkProbe: Probe {

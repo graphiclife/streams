@@ -12,7 +12,7 @@ import gstreamer_swift
 public final class RTPReceiver {
     public struct Peer {
         public let ssrc: Int
-        public let payload: Payload
+        public let payload: PayloadInfo
         public let pad: Pad
     }
 
@@ -21,7 +21,7 @@ public final class RTPReceiver {
 
     public static func create(in pipeline: Pipeline,
                               application: Application,
-                                 payloads: [Payload],
+                                 payloads: [PayloadInfo],
                                    onPeer: @escaping PeerHandler,
                         onRTPSenderChange: @escaping SenderChangeHandler,
                        onRTCPSenderChange: @escaping SenderChangeHandler) throws -> RTPReceiver {

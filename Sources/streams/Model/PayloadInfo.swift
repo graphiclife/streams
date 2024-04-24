@@ -1,5 +1,5 @@
 //
-//  Payload.swift
+//  PayloadInfo.swift
 //  streams
 //
 //  Created by @graphiclife on April 17, 2024.
@@ -8,7 +8,7 @@
 import Foundation
 import gstreamer_swift
 
-public struct Payload: Codable {
+public struct PayloadInfo: Codable {
     public let type: Int
     public let clockRate: Int
     public let channels: Int

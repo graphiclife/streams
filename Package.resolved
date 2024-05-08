@@ -1,0 +1,14 @@
+{
+  "pins" : [
+    {
+      "identity" : "gstreamer-swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/graphiclife/gstreamer-swift.git",
+      "state" : {
+        "revision" : "4764113f1de1d48e2eff53f1c28e53b70c54d737",
+        "version" : "0.1.0"
+      }
+    }
+  ],
+  "version" : 2
+}

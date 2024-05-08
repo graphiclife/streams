@@ -16,7 +16,7 @@ let package = Package(
         .target(name: "streams", dependencies: [
             .product(name: "gstreamer-swift", package: "gstreamer-swift"),
         ], swiftSettings: [
-            .unsafeFlags(["-enable-bare-slash-regex"])
+            .enableUpcomingFeature("BareSlashRegexLiterals")
         ]),
         .testTarget(name: "streamsTests", dependencies: [
             "streams"

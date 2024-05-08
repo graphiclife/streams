@@ -8,16 +8,15 @@
 import Foundation
 
 public enum Codec: String, Codable {
-    case opus
-    case g722
-    case pcmu
-    case pcma
-    case telephoneEvent
-
-    case h264
-    case vp8
-    case vp9
-    case av1
+    case opus = "opus"
+    case g722 = "g722"
+    case pcmu = "pcmu"
+    case pcma = "pcma"
+    case telephoneEvent = "telephone-event"
+    case h264 = "h264"
+    case vp8 = "vp8"
+    case vp9 = "vp9"
+    case av1 = "av1"
 
     public var media: String {
         switch self {

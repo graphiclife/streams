@@ -10,19 +10,19 @@ import gstreamer
 import gstreamer_swift
 
 public final class RTPReceiver {
-    public struct Peer {
+    public struct Stream {
         public let ssrc: Int
         public let payload: PayloadInfo
         public let pad: Pad
     }
 
-    public typealias PeerHandler = (Peer) -> Void
+    public typealias StreamHandler = (Stream) -> Void
     public typealias SenderChangeHandler = (RTPNetworkProbe.Sender) -> Void
 
     public static func create(in pipeline: Pipeline,
                               application: Application,
                                  payloads: [PayloadInfo],
-                                   onPeer: @escaping PeerHandler,
+                                 onStream: @escaping StreamHandler,
                         onRTPSenderChange: @escaping SenderChangeHandler,
                        onRTCPSenderChange: @escaping SenderChangeHandler) throws -> RTPReceiver {
         let portTuple = application.usingService { (ports: Ports) in
@@ -84,7 +84,7 @@ public final class RTPReceiver {
                 return
             }
 
-            onPeer(.init(ssrc: ssrc, payload: payload, pad: pad))
+            onStream(.init(ssrc: ssrc, payload: payload, pad: pad))
         }
 
         return .init(portTuple: portTuple)

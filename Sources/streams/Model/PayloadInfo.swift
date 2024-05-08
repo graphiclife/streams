@@ -9,13 +9,17 @@ import Foundation
 import gstreamer_swift
 
 public struct PayloadInfo: Codable {
+    public enum Capability: String, Codable {
+        case useInbandFec = "useinbandfec"
+    }
+
     public let type: Int
     public let clockRate: Int
     public let channels: Int
     public let codec: Codec
-    public let capabilities: [String: String]?
+    public let capabilities: [Capability]
 
-    public init(type: Int, clockRate: Int, channels: Int, codec: Codec, capabilities: [String : String]? = nil) {
+    public init(type: Int, clockRate: Int, channels: Int, codec: Codec, capabilities: [Capability] = []) {
         self.type = type
         self.clockRate = clockRate
         self.channels = channels
@@ -33,7 +37,7 @@ public struct PayloadInfo: Codable {
             .build()
     }
 
-    public func elementsForDecodingRTP() -> (depay: Element, decoder: Element) {
+    public func elementsForDecoding() -> (depay: Element, decoder: Element) {
         let depay: Element
         let decoder: Element
 
@@ -41,6 +45,10 @@ public struct PayloadInfo: Codable {
         case .opus:
             depay = Element("rtpopusdepay")
             decoder = Element("opusdec")
+
+            if capabilities.contains(.useInbandFec) {
+                decoder.set("use-inband-fec", to: true)
+            }
 
         case .g722:
             depay = Element("rtpg722depay")

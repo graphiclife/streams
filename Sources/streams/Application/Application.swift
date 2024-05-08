@@ -5,6 +5,7 @@
 //  Created by @graphiclife on April 17, 2024.
 //
 
+import Dispatch
 import Foundation
 import gstreamer
 import gstreamer_swift

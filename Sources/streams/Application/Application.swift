@@ -47,7 +47,7 @@ public class Application {
     }
 
     private func setupSignals() {
-        let cleanup: DispatchSourceProtocol.DispatchSourceHandler = {
+        let cleanup = {
             switch self.state {
             case .idle:
                 break

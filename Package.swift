@@ -10,7 +10,7 @@ let package = Package(
         .library(name: "streams", targets: ["streams"]),
     ],
     dependencies: [
-      .package(name: "gstreamer-swift", path: "/Users/mans.severin/Documents/Projects/Swift/gstreamer-swift"),
+        .package(url: "https://github.com/graphiclife/gstreamer-swift.git", from: "0.1.0"),
     ],
     targets: [
         .target(name: "streams", dependencies: [

@@ -33,10 +33,10 @@ public class Application {
     private var state: State = .idle
 
     public init() {
+        setup()
     }
 
     public func run() {
-        setup()
         dispatchMain()
     }
 

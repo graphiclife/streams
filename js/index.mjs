@@ -1,4 +1,4 @@
-import { Streamlink } from './call.mjs';
+import { Streamlink } from './streamlink.mjs';
 import { Codec, Capability, CapabilityName, PayloadInfo, PortTuple, Transport } from './types.mjs';
 
 export { Streamlink };

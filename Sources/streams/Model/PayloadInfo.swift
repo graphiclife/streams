@@ -9,8 +9,18 @@ import Foundation
 import gstreamer_swift
 
 public struct PayloadInfo: Codable {
-    public enum Capability: String, Codable {
-        case useInbandFec = "useinbandfec"
+    public struct Capability: Codable {
+        public enum CapabilityName: String {
+            case events = "events"
+            case useInbandFec = "useinbandfec"
+        }
+
+        public let name: String
+        public let value: String
+
+        public func `is`(_ capabilityName: CapabilityName) -> Bool {
+            return name == capabilityName.rawValue
+        }
     }
 
     public let type: Int
@@ -46,8 +56,8 @@ public struct PayloadInfo: Codable {
             depay = Element("rtpopusdepay")
             decoder = Element("opusdec")
 
-            if capabilities.contains(.useInbandFec) {
-                decoder.set("use-inband-fec", to: true)
+            if let capability = capabilities.first(where: { $0.is(.useInbandFec) }) {
+                decoder.set("use-inband-fec", to: capability.value == "1" )
             }
 
         case .g722:

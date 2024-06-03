@@ -27,8 +27,10 @@ public class RequestParser: ApplicationService {
         requestHandlers[T.name] = handler.decoder
     }
 
-    func readFile(_ fileno: Int32) {
+    func readFromFile(_ fileno: Int32) {
         var bytesRead = 0
+
+        fputs("Reading data\n", stderr)
 
         repeat {
             bytesRead = withUnsafeTemporaryAllocation(of: UInt8.self, capacity: 1024) { buffer in
@@ -55,6 +57,16 @@ public class RequestParser: ApplicationService {
         while let range = requestDataBuffer.range(of: newline) {
             let data = requestDataBuffer[..<range.lowerBound]
 
+            data.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) in
+                write(STDERR_FILENO, "\n", 1)
+                write(STDERR_FILENO, "\n", 1)
+
+                write(STDERR_FILENO, buffer.baseAddress, buffer.count)
+                
+                write(STDERR_FILENO, "\n", 1)
+                write(STDERR_FILENO, "\n", 1)
+            }
+
             do {
                 let base = try JSONDecoder().decode(RequestBaseData.self, from: data)
 
@@ -64,7 +76,7 @@ public class RequestParser: ApplicationService {
                 
                 try handler(data)
             } catch {
-                print("Error decoding request: \(error)")
+                fputs("Error decoding request: \(error)\n", stderr)
             }
 
             requestDataBuffer.removeSubrange(..<range.upperBound)

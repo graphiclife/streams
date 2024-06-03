@@ -82,5 +82,42 @@ public struct PayloadInfo: Codable {
 
         return (depay, decoder)
     }
+
+    public func elementsForEncoding() -> (encoder: Element, pay: Element) {
+        let encoder: Element
+        let pay: Element
+
+        switch codec {
+        case .opus:
+            encoder = Element("opusenc")
+
+            if let capability = capabilities.first(where: { $0.is(.useInbandFec) }) {
+                encoder.set("inband-fec", to: capability.value == "1" )
+            }
+
+            pay = Element("rtpopuspay")
+                .set("pt", to: UInt32(type))
+
+        case .g722:
+            encoder = Element("avenc_g722")
+            pay = Element("rtpg722pay")
+                .set("pt", to: UInt32(type))
+
+        case .pcmu:
+            encoder = Element("mulawenc")
+            pay = Element("rtppcmupay")
+                .set("pt", to: UInt32(type))
+
+        case .pcma:
+            encoder = Element("alawenc")
+            pay = Element("rtppcmapay")
+                .set("pt", to: UInt32(type))
+
+        case .telephoneEvent, .av1, .h264, .vp8, .vp9:
+            fatalError("not implemented")
+        }
+
+        return (encoder, pay)
+    }
 }
 

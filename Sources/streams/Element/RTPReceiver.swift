@@ -34,7 +34,7 @@ public final class RTPReceiver {
         let rtcpSinkPad = try rtpBin.pad(request: "recv_rtcp_sink_0")
 
         let rtpSrc = Element("udpsrc")
-            .set("port", to: portTuple.rtp)
+            .set("port", to: Int32(portTuple.rtp))
             .set("caps", to: Caps.empty(mediaType: "application/x-rtp"))
             .add(to: pipeline)
 
@@ -46,7 +46,7 @@ public final class RTPReceiver {
             .link(to: rtpSinkPad)
 
         let rtcpSrc = Element("udpsrc")
-            .set("port", to: portTuple.rtcp)
+            .set("port", to: Int32(portTuple.rtcp))
             .set("caps", to: Caps.empty(mediaType: "application/x-rtcp"))
             .add(to: pipeline)
 

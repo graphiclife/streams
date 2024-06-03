@@ -24,11 +24,16 @@ public class Application {
         case running(loop: MainLoop)
     }
 
-    public let context = MainContext()
+    private enum IOSource {
+        case read(DispatchSourceRead)
+        case write(DispatchSourceWrite)
+    }
 
-    private let queue = DispatchQueue(label: "application")
+    public let context = MainContext()
+    public let queue = DispatchQueue(label: "application")
+
     private var signals = [DispatchSourceSignal]()
-    private var io = [DispatchSourceRead]()
+    private var io = [IOSource]()
 
     private var state: State = .idle
 
@@ -88,12 +93,12 @@ public class Application {
             return parser
         }
 
-        let source = DispatchSource.makeReadSource(fileDescriptor: STDIN_FILENO, queue: queue)
-        source.setEventHandler(qos: .default) {
-            parser.readFile(STDIN_FILENO)
+        let readSource = DispatchSource.makeReadSource(fileDescriptor: STDIN_FILENO, queue: queue)
+        readSource.setEventHandler(qos: .default) {
+            parser.readFromFile(STDIN_FILENO)
         }
-        source.resume()
-        io.append(source)
+        readSource.resume()
+        io.append(.read(readSource))
     }
 
     //

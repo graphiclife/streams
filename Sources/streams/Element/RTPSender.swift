@@ -10,7 +10,9 @@ import gstreamer
 import gstreamer_swift
 
 public final class RTPSender {
-    public static func create(in pipeline: Pipeline, transport: Transport, payloads: [PayloadInfo], bindPort: PortTuple) throws -> RTPSender {
+    public typealias ErrorHandler = (Error) -> Void
+
+    public static func create(in pipeline: Pipeline, transport: Transport, payloads: [PayloadInfo], bindPort: PortTuple, onError: @escaping ErrorHandler) throws -> RTPSender {
         let rtpBin = Element("rtpbin").add(to: pipeline)
         let rtpUDPSink = Element("udpsink")
             .set("host", to: "127.0.0.1")
@@ -45,7 +47,7 @@ public final class RTPSender {
             do {
                 try pad.link(to: queue.pad(static: "sink"))
             } catch {
-                _ = fputs("Error linking \(error)\n", stderr)
+                onError(error)
             }
         }
 

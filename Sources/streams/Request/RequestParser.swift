@@ -12,12 +12,15 @@ public class RequestParser: ApplicationService {
         case badRequest
     }
 
+    public typealias ErrorHandler = (Error) -> Void
+
     typealias Decoder = (Data) throws -> Void
 
     public unowned let application: Application
 
     private var requestHandlers = [String: Decoder]()
     private var requestDataBuffer = Data()
+    private var errorHandlers = [ErrorHandler]()
 
     public required init(application: Application) {
         self.application = application
@@ -27,10 +30,12 @@ public class RequestParser: ApplicationService {
         requestHandlers[T.name] = handler.decoder
     }
 
+    public func registerErrorHandler(_ handler: @escaping ErrorHandler) {
+        errorHandlers.append(handler)
+    }
+
     func readFromFile(_ fileno: Int32) {
         var bytesRead = 0
-
-        fputs("Reading data\n", stderr)
 
         repeat {
             bytesRead = withUnsafeTemporaryAllocation(of: UInt8.self, capacity: 1024) { buffer in
@@ -57,16 +62,6 @@ public class RequestParser: ApplicationService {
         while let range = requestDataBuffer.range(of: newline) {
             let data = requestDataBuffer[..<range.lowerBound]
 
-            data.withUnsafeBytes { (buffer: UnsafeRawBufferPointer) in
-                write(STDERR_FILENO, "\n", 1)
-                write(STDERR_FILENO, "\n", 1)
-
-                write(STDERR_FILENO, buffer.baseAddress, buffer.count)
-                
-                write(STDERR_FILENO, "\n", 1)
-                write(STDERR_FILENO, "\n", 1)
-            }
-
             do {
                 let base = try JSONDecoder().decode(RequestBaseData.self, from: data)
 
@@ -76,7 +71,9 @@ public class RequestParser: ApplicationService {
                 
                 try handler(data)
             } catch {
-                fputs("Error decoding request: \(error)\n", stderr)
+                errorHandlers.forEach { handler in
+                    handler(error)
+                }
             }
 
             requestDataBuffer.removeSubrange(..<range.upperBound)

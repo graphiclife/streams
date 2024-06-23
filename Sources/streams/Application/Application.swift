@@ -46,12 +46,16 @@ public class Application {
     }
 
     private func setup() {
+        print("SETUP")
+
         setupSignals()
         setupContext()
         setupIO()
     }
 
     private func setupSignals() {
+        print("setupSignals")
+
         let cleanup = {
             switch self.state {
             case .idle:
@@ -66,16 +70,25 @@ public class Application {
 
         for sig in [SIGINT, SIGQUIT, SIGTERM] {
             signal(sig, SIG_IGN)
+            
+            print("past sig_ign")
 
             let source = DispatchSource.makeSignalSource(signal: sig, queue: queue)
+            print("made source")
+
             source.setEventHandler(qos: .background, handler: cleanup)
+            print("setEventHandler")
+
             source.resume()
+            print("resume")
 
             signals.append(source)
         }
     }
 
     private func setupContext() {
+        print("setupContext")
+
         Task {
             var argc: Int32 = 0
             gst_init(&argc, nil)
@@ -89,6 +102,8 @@ public class Application {
     }
 
     private func setupIO() {
+        print("setupIO")
+
         let parser = usingService { (parser: RequestParser) in
             return parser
         }

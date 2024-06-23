@@ -48,7 +48,7 @@ public class Application {
     private func setup() {
         print("SETUP")
 
-        setupSignals()
+        // setupSignals()
         setupContext()
         setupIO()
     }

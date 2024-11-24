@@ -8,6 +8,40 @@
 import Foundation
 
 public enum Codec: String, Codable {
+    public static func fromMimeType(_ mimeType: String) -> Codec? {
+        switch mimeType.lowercased() {
+        case "audio/opus":
+            return .opus
+
+        case "audio/g722":
+            return .g722
+
+        case "audio/pcmu":
+            return .pcmu
+
+        case "audio/pcma":
+            return .pcma
+
+        case "audio/telephone-event":
+            return .telephoneEvent
+
+        case "video/h264":
+            return .h264
+
+        case "video/vp8":
+            return .vp8
+
+        case "video/vp9":
+            return .vp9
+
+        case "video/av1":
+            return .av1
+
+        default:
+            return nil
+        }
+    }
+
     case opus = "opus"
     case g722 = "g722"
     case pcmu = "pcmu"

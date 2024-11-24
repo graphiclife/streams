@@ -18,7 +18,7 @@ public protocol ApplicationService: ApplicationProvider {
     init(application: Application)
 }
 
-public class Application {
+public final class Application: @unchecked Sendable {
     private enum State {
         case idle
         case running(loop: MainLoop)

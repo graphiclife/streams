@@ -18,6 +18,11 @@ public struct PayloadInfo: Codable {
         public let name: String
         public let value: String
 
+        public init(name: CapabilityName, value: String) {
+            self.name = name.rawValue
+            self.value = value
+        }
+
         public func `is`(_ capabilityName: CapabilityName) -> Bool {
             return name == capabilityName.rawValue
         }
